@@ -4,7 +4,7 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 
-// ExchangeRateService 接口用於定義與匯率 API 通信的操作。使用 Retrofit 動態生成實現類，執行 HTTP 請求。
+// ExchangeRateService 介面用於定義與匯率 API 通信的操作。使用 Retrofit 動態生成實現類，執行 HTTP 請求。
 // @GET 定義了此方法執行的是 HTTP GET 請求。
 // URL 模板中的 {} 表示路徑參數，將由 @Path 指定的值替換。
 
