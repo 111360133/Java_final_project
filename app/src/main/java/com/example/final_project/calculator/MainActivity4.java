@@ -51,7 +51,6 @@ public class MainActivity4 extends AppCompatActivity {
         button_equals.setOnClickListener(v -> {
             String expression = inputEditText.getText().toString().trim();
 
-
             if (expression.isEmpty()) {
                 // 如果沒有輸入表達式，提示用戶
                 Toast.makeText(MainActivity4.this, "請輸入數學表達式", Toast.LENGTH_SHORT).show();
