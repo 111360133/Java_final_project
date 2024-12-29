@@ -22,7 +22,6 @@ public class MainActivity2 extends AppCompatActivity {
     private EditText amountEditText;
     private TextView resultTextView;
     private Button convertButton, button_home;
-    private Button button_plus, button_subtract, button_multiply, button_divided, button_equals;
     private Button button0, button1, button2, button3, button4, button5, button6,button7,
             button8, button9, button_delete, button_dot,button_left, button_right, button_return;
     private String fromCurrency = "USD";
