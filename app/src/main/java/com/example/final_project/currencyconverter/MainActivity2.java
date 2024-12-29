@@ -277,12 +277,6 @@ public class MainActivity2 extends AppCompatActivity {
         // 取得用戶輸入的金額並移除多餘空格
         String amountStr = amountEditText.getText().toString().trim();
 
-        //  檢查金額字符串中是否包含運算符號，若包含運算符則無法進行換算
-        if (amountStr.contains("+") || amountStr.contains("-") || amountStr.contains("×") || amountStr.contains("÷")) {
-            Toast.makeText(this, "因存在運算符號無法轉換", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
         //  如果當前匯率尚未獲取，顯示提示並退出
         if (currentRates == null) {
             Toast.makeText(this, "尚未載入匯率，請稍後", Toast.LENGTH_SHORT).show();

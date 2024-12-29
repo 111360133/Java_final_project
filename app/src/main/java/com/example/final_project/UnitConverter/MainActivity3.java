@@ -276,7 +276,7 @@ public class MainActivity3 extends AppCompatActivity {
                 fromUnitAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, lengthUnits);
                 toUnitAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, lengthUnits);
                 break;
-            case 1: // 重量
+            case 1: // 質量
                 fromUnitAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, weightUnits);
                 toUnitAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, weightUnits);
                 break;
