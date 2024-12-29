@@ -1,28 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- 根佈局為LinearLayout，使用垂直方向排列所有子元件 -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
     android:background="@android:color/white">
 
+    <!-- 顯示歷史紀錄的ListView -->
     <ListView
         android:id="@+id/historyListView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        android:divider="@android:color/darker_gray"
+        android:dividerHeight="1dp"/>
 
+    <!-- 清除歷史紀錄的按鈕 -->
     <Button
         android:id="@+id/clearHistoryButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="清除歷史紀錄"/>
 
+    <!-- 返回主畫面的按鈕 -->
     <Button
         android:id="@+id/homeButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="返回主畫面"/>
-
 
 </LinearLayout>
