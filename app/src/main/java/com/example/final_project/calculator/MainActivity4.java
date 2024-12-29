@@ -2,6 +2,7 @@ package com.example.final_project.calculator;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -15,6 +16,13 @@ import com.example.final_project.utils.SharedData;
 
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
+
+import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.widget.EditText;
+import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
 
 // 主活動類，用於提供計算器功能
 public class MainActivity4 extends AppCompatActivity {
@@ -43,11 +51,13 @@ public class MainActivity4 extends AppCompatActivity {
         button_equals.setOnClickListener(v -> {
             String expression = inputEditText.getText().toString().trim();
 
+
             if (expression.isEmpty()) {
                 // 如果沒有輸入表達式，提示用戶
                 Toast.makeText(MainActivity4.this, "請輸入數學表達式", Toast.LENGTH_SHORT).show();
                 return;
             }
+
 
             // 計算表達式並獲取結果
             String resultlog = evaluateExpression();
@@ -193,15 +203,52 @@ public class MainActivity4 extends AppCompatActivity {
     // 評估數學表達式
     private String evaluateExpression() {
         try {
-            String expression = inputEditText.getText().toString().trim();
+            //獲取輸入數據
+            String inputdata = inputEditText.getText().toString().trim();
+
+            //修正連續小數點等異常輸入
+            String expression = FixDoubleOperators(inputdata);
+
+            //將 StringBuilder 轉換為 String
             expression = expression.replace("×", "*").replace("÷", "/")
                     .replace("²", "^2").replace("√", "sqrt");
 
-            double result = new ExpressionBuilder(expression).build().evaluate(); // 使用 exp4j 計算結果
+            //使用 exp4j 計算結果
+            double result = new ExpressionBuilder(expression).build().evaluate();
+
+            //返回計算結果
             return expression + "=" + result;
+
         } catch (Exception e) {
+            // 捕捉異常並顯示錯誤消息
             Toast.makeText(this, "運算錯誤", Toast.LENGTH_SHORT).show();
             return "0";
         }
+    }
+    private String FixDoubleOperators(String beforefix) {
+        StringBuilder result = new StringBuilder();
+        char lastType = '\0'; // 用於記錄上一個字元的類型
+
+        for (char currentChar : beforefix.toCharArray()) {
+            if ("+-×÷".indexOf(currentChar) != -1) {
+                // 當前字元是運算符
+                if (lastType != 'O') {
+                    result.append(currentChar);
+                    lastType = 'O'; // 設定為運算符類型
+                }
+            } else if (currentChar == '.') {
+                // 當前字元是小數點
+                if (lastType != 'D') {
+                    result.append(currentChar);
+                    lastType = 'D'; // 設定為小數點類型
+                }
+            } else {
+                // 其他字元
+                result.append(currentChar);
+                lastType = 'X'; // 設定為其他字元類型
+            }
+        }
+
+        return result.toString();
     }
 }
