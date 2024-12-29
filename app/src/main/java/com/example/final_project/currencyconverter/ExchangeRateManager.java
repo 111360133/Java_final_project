@@ -18,8 +18,6 @@ public class ExchangeRateManager {
     // 定義服務接口
     private ExchangeRateService service;
 
-    private Context context;  // 保存 Context
-
     // 初始化 Retrofit 並建立 ExchangeRateService 實例
     public ExchangeRateManager() {
         // 使用 Retrofit 建立實例，配置基礎 URL 和 JSON 解析器
