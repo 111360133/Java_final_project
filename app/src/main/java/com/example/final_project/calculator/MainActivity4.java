@@ -73,6 +73,23 @@ public class MainActivity4 extends AppCompatActivity {
             resultTextView.setText(resultlog);
             saveToHistory(resultlog);
         });
+
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra("calculation_record")) {
+            String calculationRecord = intent.getStringExtra("calculation_record");
+
+            if (calculationRecord != null) {
+                // 提取計算式部分（假設格式為 "5 + 3 * 2 = 11"）
+                if (calculationRecord.contains("=")) {
+                    String[] parts = calculationRecord.split("=");
+                    if (parts.length > 0) {
+                        inputEditText.setText(parts[0].trim()); // 顯示計算式部分
+                    }
+                } else {
+                    inputEditText.setText(calculationRecord.trim()); // 若無 "="，直接顯示
+                }
+            }
+        }
     }
 
     // 初始化 UI 元件
