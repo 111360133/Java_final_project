@@ -61,23 +61,21 @@ public class HistoryAdapter extends ArrayAdapter<String> {
             // 🟢 內層括號背景顏色（淡綠色）
             applyBackgroundToBrackets(spannable, "\\([^()]*\\)", Color.parseColor("#C8E6C9"));
 
-            // 🔵 括號內的運算符著色
+            // 🔵 括號內的運算符著色（包含小數）
             applyColorToInnerBracketOperations(spannable, "\\(([^()]*)\\)");
 
             // 🟠 括號前的乘除號著色
-            applyColorToBeforeBracketOperators(spannable, "(\\d+)\\s*([*/])\\s*\\(");
+            applyColorToBeforeBracketOperators(spannable, "(\\d+(\\.\\d+)?)\\s*([*/])\\s*\\(");
 
             // 🟦 括號後的乘除號著色
-            applyColorToAfterBracketOperators(spannable, "\\)\\s*([*/])\\s*(\\d+)");
+            applyColorToAfterBracketOperators(spannable, "\\)\\s*([*/])\\s*(\\d+(\\.\\d+)?)");
         } else {
-            // 🟠 沒有括號時，著色所有的乘除運算符
-            applyColorToAllOperators(spannable, "(\\d+)\\s*([*/])\\s*(\\d+)");
+            // 🟠 沒有括號時，著色所有的乘除運算符（包含小數）
+            applyColorToAllOperators(spannable, "(\\d+(\\.\\d+)?)\\s*([*/])\\s*(\\d+(\\.\\d+)?)");
         }
 
         return spannable;
     }
-
-
 
     // 🟣 設定括號及其內容的背景顏色
     private void applyBackgroundToBrackets(SpannableString spannable, String regex, int color) {
@@ -94,7 +92,7 @@ public class HistoryAdapter extends ArrayAdapter<String> {
         }
     }
 
-    // 🟢 括號內的運算符著色
+    // 🟢 括號內的運算符著色（包含小數）
     private void applyColorToInnerBracketOperations(SpannableString spannable, String regex) {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(spannable);
@@ -103,11 +101,11 @@ public class HistoryAdapter extends ArrayAdapter<String> {
             String content = matcher.group(1);
             int start = matcher.start(1);
 
-            Pattern innerPattern = Pattern.compile("(\\d+)\\s*\\*\\s*(\\d+)|(\\d+)\\s*/\\s*(\\d+)");
+            Pattern innerPattern = Pattern.compile("(\\d+(\\.\\d+)?)\\s*\\*\\s*(\\d+(\\.\\d+)?)|(\\d+(\\.\\d+)?)\\s*/\\s*(\\d+(\\.\\d+)?)");
             Matcher innerMatcher = innerPattern.matcher(content);
 
             while (innerMatcher.find()) {
-                int color = innerMatcher.group(2) != null ? Color.parseColor("#FF9800") : Color.parseColor("#2196F3");
+                int color = innerMatcher.group(3) != null ? Color.parseColor("#FF9800") : Color.parseColor("#2196F3");
                 spannable.setSpan(
                         new ForegroundColorSpan(color),
                         start + innerMatcher.start(),
@@ -118,36 +116,21 @@ public class HistoryAdapter extends ArrayAdapter<String> {
         }
     }
 
-    private void applyColorToOperatorsOutsideBrackets(SpannableString spannable, String regex, int color) {
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(spannable);
-
-        while (matcher.find()) {
-            spannable.setSpan(
-                    new ForegroundColorSpan(color),
-                    matcher.start(),
-                    matcher.end(),
-                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-            );
-        }
-    }
-    // 🔵 括號前的乘除運算符著色
+    // 🔵 括號前的乘除運算符著色（包含小數）
     private void applyColorToBeforeBracketOperators(SpannableString spannable, String regex) {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(spannable);
 
         while (matcher.find()) {
-            // 著色運算符（* 或 /）
             spannable.setSpan(
-                    new ForegroundColorSpan(matcher.group(2).equals("*") ? Color.parseColor("#FF9800") : Color.parseColor("#2196F3")),
-                    matcher.start(2),
-                    matcher.end(2),
+                    new ForegroundColorSpan(matcher.group(3).equals("*") ? Color.parseColor("#FF9800") : Color.parseColor("#2196F3")),
+                    matcher.start(3),
+                    matcher.end(3),
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
             );
 
-            // 著色運算符左側數字
             spannable.setSpan(
-                    new ForegroundColorSpan(matcher.group(2).equals("*") ? Color.parseColor("#FF9800") : Color.parseColor("#2196F3")),
+                    new ForegroundColorSpan(matcher.group(3).equals("*") ? Color.parseColor("#FF9800") : Color.parseColor("#2196F3")),
                     matcher.start(1),
                     matcher.end(1),
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
@@ -155,13 +138,12 @@ public class HistoryAdapter extends ArrayAdapter<String> {
         }
     }
 
-    // 🟦 括號後的乘除運算符著色
+    // 🟦 括號後的乘除運算符著色（包含小數）
     private void applyColorToAfterBracketOperators(SpannableString spannable, String regex) {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(spannable);
 
         while (matcher.find()) {
-            // 著色運算符（* 或 /）
             spannable.setSpan(
                     new ForegroundColorSpan(matcher.group(1).equals("*") ? Color.parseColor("#FF9800") : Color.parseColor("#2196F3")),
                     matcher.start(1),
@@ -169,11 +151,43 @@ public class HistoryAdapter extends ArrayAdapter<String> {
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
             );
 
-            // 著色運算符右側數字
             spannable.setSpan(
                     new ForegroundColorSpan(matcher.group(1).equals("*") ? Color.parseColor("#FF9800") : Color.parseColor("#2196F3")),
                     matcher.start(2),
                     matcher.end(2),
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            );
+        }
+    }
+
+    // 🟠 著色所有乘除運算符（無括號，包含小數）
+    private void applyColorToAllOperators(SpannableString spannable, String regex) {
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(spannable);
+
+        while (matcher.find()) {
+            String operator = matcher.group(3);
+
+            int color = operator.equals("*") ? Color.parseColor("#FF9800") : Color.parseColor("#2196F3");
+
+            spannable.setSpan(
+                    new ForegroundColorSpan(color),
+                    matcher.start(3),
+                    matcher.end(3),
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            );
+
+            spannable.setSpan(
+                    new ForegroundColorSpan(color),
+                    matcher.start(1),
+                    matcher.end(1),
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            );
+
+            spannable.setSpan(
+                    new ForegroundColorSpan(color),
+                    matcher.start(4),
+                    matcher.end(4),
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
             );
         }
@@ -181,44 +195,7 @@ public class HistoryAdapter extends ArrayAdapter<String> {
 
     public void removeItem(int position) {
         if (position >= 0 && position < getCount()) {
-            historyList.remove(position); // 假設你的資料集合名稱是 data
+            historyList.remove(position);
         }
     }
-
-    // 🟠 著色所有乘除運算符（無括號時）
-    private void applyColorToAllOperators(SpannableString spannable, String regex) {
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(spannable);
-
-        while (matcher.find()) {
-            String operator = matcher.group(2); // 提取運算符 (* or /)
-
-            int color = operator.equals("*") ? Color.parseColor("#FF9800") : Color.parseColor("#2196F3");
-
-            // 著色運算符號 (* or /)
-            spannable.setSpan(
-                    new ForegroundColorSpan(color),
-                    matcher.start(2),
-                    matcher.end(2),
-                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-            );
-
-            // 著色左側數字
-            spannable.setSpan(
-                    new ForegroundColorSpan(color),
-                    matcher.start(1),
-                    matcher.end(1),
-                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-            );
-
-            // 著色右側數字
-            spannable.setSpan(
-                    new ForegroundColorSpan(color),
-                    matcher.start(3),
-                    matcher.end(3),
-                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-            );
-        }
-    }
-
 }
