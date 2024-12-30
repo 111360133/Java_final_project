@@ -45,9 +45,6 @@ public class MainActivity2 extends AppCompatActivity {
         // 設置貨幣選擇器
         setupCurrencySpinners();
 
-        // 設置轉換按鈕監聽器
-        convertButton.setOnClickListener(v -> performConversion());
-
         // 初始載入匯率
         fetchExchangeRates();
     }
@@ -103,6 +100,8 @@ public class MainActivity2 extends AppCompatActivity {
         button_right.setOnClickListener(v -> moveCursorRight());
         // 返回主畫面按鈕
         button_home.setOnClickListener(v -> home());
+        // 轉換按鈕
+        convertButton.setOnClickListener(v -> performConversion());
     }
 
     // 返回主畫面

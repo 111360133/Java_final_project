@@ -13,7 +13,7 @@ public class ExchangeRateManager {
     // API 的基礎 URL
     private static final String BASE_URL = "https://v6.exchangerate-api.com/";
 
-    // 定義服務接口
+    // 定義服務介面
     private ExchangeRateService service;
 
     // 初始化 Retrofit 並建立 ExchangeRateService 實例
