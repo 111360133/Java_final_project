@@ -101,7 +101,10 @@ public class HistoryAdapter extends ArrayAdapter<String> {
             String content = matcher.group(1);
             int start = matcher.start(1);
 
-            Pattern innerPattern = Pattern.compile("(\\d+(\\.\\d+)?)\\s*\\*\\s*(\\d+(\\.\\d+)?)|(\\d+(\\.\\d+)?)\\s*/\\s*(\\d+(\\.\\d+)?)");
+            Pattern innerPattern = Pattern.compile(
+                    "(?<!\\))(?<!\\^)(?<!sqrt)\\b(\\d+(\\.\\d+)?)\\s*\\*\\s*(\\d+(\\.\\d+)?)\\b(?!\\^)(?!sqrt)|" +
+                            "(?<!\\))(?<!\\^)(?<!sqrt)\\b(\\d+(\\.\\d+)?)\\s*/\\s*(\\d+(\\.\\d+)?)\\b(?!\\^)(?!sqrt)"
+            );
             Matcher innerMatcher = innerPattern.matcher(content);
 
             while (innerMatcher.find()) {
@@ -118,7 +121,9 @@ public class HistoryAdapter extends ArrayAdapter<String> {
 
     // 🔵 括號前的乘除運算符著色（包含小數）
     private void applyColorToBeforeBracketOperators(SpannableString spannable, String regex) {
-        Pattern pattern = Pattern.compile(regex);
+        Pattern pattern = Pattern.compile(
+                "(?<!\\))(?<!\\^)(?<!sqrt)\\b(\\d+(\\.\\d+)?)\\s*([*/])\\s*\\("
+        );
         Matcher matcher = pattern.matcher(spannable);
 
         while (matcher.find()) {
@@ -140,7 +145,9 @@ public class HistoryAdapter extends ArrayAdapter<String> {
 
     // 🟦 括號後的乘除運算符著色（包含小數）
     private void applyColorToAfterBracketOperators(SpannableString spannable, String regex) {
-        Pattern pattern = Pattern.compile(regex);
+        Pattern pattern = Pattern.compile(
+                "\\)\\s*([*/])\\s*(?<!\\^)(?<!sqrt)\\b(\\d+(\\.\\d+)?)\\b(?!\\^)(?!sqrt)"
+        );
         Matcher matcher = pattern.matcher(spannable);
 
         while (matcher.find()) {
@@ -162,12 +169,14 @@ public class HistoryAdapter extends ArrayAdapter<String> {
 
     // 🟠 著色所有乘除運算符（無括號，包含小數）
     private void applyColorToAllOperators(SpannableString spannable, String regex) {
-        Pattern pattern = Pattern.compile(regex);
+        // 排除 ^ 和 sqrt 后的运算元
+        Pattern pattern = Pattern.compile(
+                "(?<!\\))(?<!\\^)(?<!sqrt)\\b(\\d+(\\.\\d+)?)\\s*([*/])\\s*(\\d+(\\.\\d+)?)\\b(?!\\^)(?!sqrt)"
+        );
         Matcher matcher = pattern.matcher(spannable);
 
         while (matcher.find()) {
             String operator = matcher.group(3);
-
             int color = operator.equals("*") ? Color.parseColor("#FF9800") : Color.parseColor("#2196F3");
 
             spannable.setSpan(
@@ -192,6 +201,9 @@ public class HistoryAdapter extends ArrayAdapter<String> {
             );
         }
     }
+
+
+
 
     public void removeItem(int position) {
         if (position >= 0 && position < getCount()) {
