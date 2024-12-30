@@ -3,5 +3,5 @@
 
     <!-- Please use the API of ExchangeRate -->
     <!-- Remove comments, keep only the API -->
-    <string name="api_key"><!--your_api--></string>
+    <string name="api_key">bc61131fe5e5c9713389102e</string>
 </resources>
