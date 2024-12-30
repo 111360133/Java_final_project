@@ -273,30 +273,44 @@ public class MainActivity3 extends AppCompatActivity {
 
         switch (categoryPosition) {
             case 0: // 長度
+                clearAllText();
+                resultTextView.setText("");
                 fromUnitAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, lengthUnits);
                 toUnitAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, lengthUnits);
                 break;
             case 1: // 質量
+                clearAllText();
+                resultTextView.setText("");
                 fromUnitAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, weightUnits);
                 toUnitAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, weightUnits);
                 break;
             case 2: // 溫度
+                clearAllText();
+                resultTextView.setText("");
                 fromUnitAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, temperatureUnits);
                 toUnitAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, temperatureUnits);
                 break;
             case 3: // 能量
+                clearAllText();
+                resultTextView.setText("");
                 fromUnitAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, energyUnits);
                 toUnitAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, energyUnits);
                 break;
             case 4: // 面積
+                clearAllText();
+                resultTextView.setText("");
                 fromUnitAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, areaUnits);
                 toUnitAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, areaUnits);
                 break;
             case 5: // 體積
+                clearAllText();
+                resultTextView.setText("");
                 fromUnitAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, volumeUnits);
                 toUnitAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, volumeUnits);
                 break;
             case 6: // 角度
+                clearAllText();
+                resultTextView.setText("");
                 fromUnitAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, angleUnits);
                 toUnitAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, angleUnits);
                 break;

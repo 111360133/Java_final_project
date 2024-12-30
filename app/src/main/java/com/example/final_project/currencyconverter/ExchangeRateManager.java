@@ -29,7 +29,7 @@ public class ExchangeRateManager {
     }
 
     // 向 API 發送請求以獲取匯率資訊。
-    // [apiKey] API 金鑰，用於身份驗證，[baseCurrency] 基礎貨幣 (如 "USD")，[callback] 回調接口，用於處理請求結果。
+    // [apiKey] API 金鑰，用於身份驗證，[baseCurrency] 基礎貨幣 (如 "USD")，[callback] 回調介面，用於處理請求結果。
     public void getExchangeRates(String apiKey, String baseCurrency, ExchangeRateCallback callback) {
         // 調用 service 中定義的 getExchangeRates 方法，傳入 API 金鑰和基礎貨幣
         Call<ExchangeRateResponse> call = service.getExchangeRates(apiKey, baseCurrency);
