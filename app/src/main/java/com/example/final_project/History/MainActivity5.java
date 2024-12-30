@@ -64,9 +64,6 @@ public class MainActivity5 extends AppCompatActivity {
                 .map(parts -> parts[1])
                 .collect(Collectors.toList());
 
-        /*adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, displayList);
-        historyListView.setAdapter(adapter);*/
-
         // 使用自定義 Adapter
         HistoryAdapter customAdapter = new HistoryAdapter(this, displayList);
         historyListView.setAdapter(customAdapter);
@@ -110,8 +107,7 @@ public class MainActivity5 extends AppCompatActivity {
 
         return 0;
     }
-
-
+    
     //清除歷史紀錄
     private void clearHistory() {
         SharedData.getInstance().clearHistory();
@@ -142,7 +138,6 @@ public class MainActivity5 extends AppCompatActivity {
     }
 
     // 刪除單項歷史紀錄
-    // 刪除單項歷史紀錄
     private void deleteSingleRecord(int position) {
         List<String> historyList = SharedData.getInstance().getHistoryList();
         if (historyList != null && position >= 0 && position < historyList.size()) {
@@ -160,6 +155,5 @@ public class MainActivity5 extends AppCompatActivity {
             showToast("無法刪除該項紀錄");
         }
     }
-
 
 }
