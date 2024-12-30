@@ -195,7 +195,9 @@ public class MainActivity2 extends AppCompatActivity {
         currencies.add("HKD(港幣)");
         currencies.add("KRW(韓元)");
         currencies.add("AUD(澳元)");
-
+        currencies.add("NZD(紐西蘭元)");
+        currencies.add("SGD(新加坡幣)");
+        currencies.add("IDR(印尼盾)");
 
         // 創建 ArrayAdapter 並設置貨幣列表為選項
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
