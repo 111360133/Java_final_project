@@ -40,10 +40,10 @@ public class ExchangeRateManager {
             // 處理 API 響應，檢查是否成功
             public void onResponse(Call<ExchangeRateResponse> call, Response<ExchangeRateResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    // 如果成功，通過回調接口返回響應數據
+                    // 如果成功，通過回調介面返回響應數據
                     callback.onSuccess(response.body());
                 } else {
-                    // 如果失敗，通過回調接口返回錯誤信息
+                    // 如果失敗，通過回調介面返回錯誤信息
                     callback.onError("Error fetching exchange rates");
                 }
             }
@@ -56,7 +56,7 @@ public class ExchangeRateManager {
         });
     }
 
-    // 回調接口，用於處理 API 響應結果
+    // 回調介面，用於處理 API 響應結果
     public interface ExchangeRateCallback {
         // 當 API 響應成功時執行的回調方法。
         void onSuccess(ExchangeRateResponse response);

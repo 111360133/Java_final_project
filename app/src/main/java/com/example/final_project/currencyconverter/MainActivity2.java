@@ -13,6 +13,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.final_project.MainActivity;
 import com.example.final_project.R;
+
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -293,9 +295,13 @@ public class MainActivity2 extends AppCompatActivity {
             // 使用 exchangeRateManager 的 convertCurrency 方法進行貨幣換算
             double convertedAmount = exchangeRateManager.convertCurrency(amount, fromRate, toRate);
 
-            // 將結果格式化為字符串並顯示在界面上
-            String resultText = String.format("%.2f %s = %.2f %s", amount, fromCurrency, convertedAmount, toCurrency);
+            String formattedAmount = formatNumber(amount);
+            String formattedConvertedAmount = formatNumber(convertedAmount);
+
+            // 顯示格式化後的結果
+            String resultText = String.format("%s %s = %s %s", formattedAmount, fromCurrency, formattedConvertedAmount, toCurrency);
             resultTextView.setText(resultText);
+
 
         } catch (NumberFormatException e) {
             // 捕捉數字格式異常（例如用戶輸入的金額無效）
@@ -304,5 +310,18 @@ public class MainActivity2 extends AppCompatActivity {
             // 捕捉匯率為 null 的情況，表示無法找到匯率
             Toast.makeText(this, "無法找到匯率", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    // 格式化數字方法，包含科學記數法與小數位限制
+    private String formatNumber(double value) {
+        DecimalFormat decimalFormat = new DecimalFormat("#.######"); // 最多顯示 6 位小數
+        String result = decimalFormat.format(value);
+
+        // 如果數值過大或過小，使用科學記數法
+        if (result.length() > 15 || (result.contains(".") && result.substring(result.indexOf(".")).length() > 10)) {
+            DecimalFormat scientificFormat = new DecimalFormat("0.######E0");
+            return scientificFormat.format(value);
+        }
+        return result;
     }
 }
