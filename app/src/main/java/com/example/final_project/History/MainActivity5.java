@@ -64,22 +64,31 @@ public class MainActivity5 extends AppCompatActivity {
                 .map(parts -> parts[1])
                 .collect(Collectors.toList());
 
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, displayList);
-        historyListView.setAdapter(adapter);
+        /*adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, displayList);
+        historyListView.setAdapter(adapter);*/
+
+        // 使用自定義 Adapter
+        HistoryAdapter customAdapter = new HistoryAdapter(this, displayList);
+        historyListView.setAdapter(customAdapter);
 
         // ListView 點擊事件
         historyListView.setOnItemClickListener((parent, view, position, id) -> {
-            String selectedRecord = adapter.getItem(position);
+            String selectedRecord = customAdapter.getItem(position);
             new AlertDialog.Builder(this)
-                    .setTitle("重新計算")
-                    .setMessage("是否要將該計算式帶入計算機？")
-                    .setPositiveButton("確定", (dialog, which) -> {
-                        Intent intent = new Intent(MainActivity5.this, MainActivity4.class);
-                        intent.putExtra("calculation_record", selectedRecord);
-                        startActivity(intent);
-                        finish();
+                    .setTitle("選擇操作")
+                    .setItems(new String[]{"重新計算", "刪除該項紀錄"}, (dialog, which) -> {
+                        switch (which) {
+                            case 0: // 重新計算
+                                Intent intent = new Intent(MainActivity5.this, MainActivity4.class);
+                                intent.putExtra("calculation_record", selectedRecord);
+                                startActivity(intent);
+                                finish();
+                                break;
+                            case 1: // 刪除單項紀錄
+                                deleteSingleRecord(position);
+                                break;
+                        }
                     })
-                    .setNegativeButton("取消", null)
                     .show();
         });
     }
@@ -130,6 +139,18 @@ public class MainActivity5 extends AppCompatActivity {
             toast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
             toast.show();
         });
+    }
+
+    // 刪除單項歷史紀錄
+    private void deleteSingleRecord(int position) {
+        List<String> historyList = SharedData.getInstance().getHistoryList();
+        if (historyList != null && position >= 0 && position < historyList.size()) {
+            historyList.remove(position); // 從歷史紀錄中移除該項
+            SharedData.getInstance().setHistoryList(historyList); // 更新儲存的歷史紀錄
+            adapter.remove(adapter.getItem(position)); // 更新 ListView 顯示
+            adapter.notifyDataSetChanged();
+            showToast("該項紀錄已刪除");
+        }
     }
 
 }
