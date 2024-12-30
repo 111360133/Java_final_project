@@ -302,7 +302,6 @@ public class MainActivity2 extends AppCompatActivity {
             String resultText = String.format("%s %s = %s %s", formattedAmount, fromCurrency, formattedConvertedAmount, toCurrency);
             resultTextView.setText(resultText);
 
-
         } catch (NumberFormatException e) {
             // 捕捉數字格式異常（例如用戶輸入的金額無效）
             Toast.makeText(this, "無效的金額", Toast.LENGTH_SHORT).show();
