@@ -51,29 +51,33 @@ public class HistoryAdapter extends ArrayAdapter<String> {
     private SpannableString colorizeExpression(String expression) {
         SpannableString spannable = new SpannableString(expression);
 
-        // 1️⃣ 外層括號背景顏色（淡紫色）
-        applyBackgroundToBrackets(spannable, "\\([^()]*\\([^()]*\\)[^()]*\\)|\\([^()]*\\)", Color.parseColor("#D1C4E9"));
+        // 🔍 檢查是否包含括號
+        boolean hasBrackets = expression.contains("(") && expression.contains(")");
 
-        // 2️⃣ 內層括號背景顏色（淡綠色）
-        applyBackgroundToBrackets(spannable, "\\([^()]*\\)", Color.parseColor("#C8E6C9"));
+        if (hasBrackets) {
+            // 🟣 外層括號背景顏色（淡紫色）
+            applyBackgroundToBrackets(spannable, "\\([^()]*\\([^()]*\\)[^()]*\\)|\\([^()]*\\)", Color.parseColor("#D1C4E9"));
 
-        // 3️⃣ 括號內運算符著色（優先處理）
-        applyColorToInnerBracketOperations(spannable, "\\(([^()]*)\\)");
+            // 🟢 內層括號背景顏色（淡綠色）
+            applyBackgroundToBrackets(spannable, "\\([^()]*\\)", Color.parseColor("#C8E6C9"));
 
-        // 4️⃣ 括號前的乘除號著色
-        applyColorToBeforeBracketOperators(spannable, "(\\d+)\\s*([*/])\\s*\\(");
+            // 🔵 括號內的運算符著色
+            applyColorToInnerBracketOperations(spannable, "\\(([^()]*)\\)");
 
-        // 5️⃣ 括號後的乘除號著色
-        applyColorToAfterBracketOperators(spannable, "\\)\\s*([*/])\\s*(\\d+)");
+            // 🟠 括號前的乘除號著色
+            applyColorToBeforeBracketOperators(spannable, "(\\d+)\\s*([*/])\\s*\\(");
 
-        // 6️⃣ 外部乘法 (`*`) 著色（排除括號範圍）
-        applyColorToOperatorsOutsideBrackets(spannable, "(\\d+)\\s*\\*\\s*(?!\\()", Color.parseColor("#FF9800"));
-
-        // 7️⃣ 外部除法 (`/`) 著色（排除括號範圍）
-        applyColorToOperatorsOutsideBrackets(spannable, "(\\d+)\\s*/\\s*(?!\\()", Color.parseColor("#2196F3"));
+            // 🟦 括號後的乘除號著色
+            applyColorToAfterBracketOperators(spannable, "\\)\\s*([*/])\\s*(\\d+)");
+        } else {
+            // 🟠 沒有括號時，著色所有的乘除運算符
+            applyColorToAllOperators(spannable, "(\\d+)\\s*([*/])\\s*(\\d+)");
+        }
 
         return spannable;
     }
+
+
 
     // 🟣 設定括號及其內容的背景顏色
     private void applyBackgroundToBrackets(SpannableString spannable, String regex, int color) {
@@ -175,5 +179,46 @@ public class HistoryAdapter extends ArrayAdapter<String> {
         }
     }
 
+    public void removeItem(int position) {
+        if (position >= 0 && position < getCount()) {
+            historyList.remove(position); // 假設你的資料集合名稱是 data
+        }
+    }
+
+    // 🟠 著色所有乘除運算符（無括號時）
+    private void applyColorToAllOperators(SpannableString spannable, String regex) {
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(spannable);
+
+        while (matcher.find()) {
+            String operator = matcher.group(2); // 提取運算符 (* or /)
+
+            int color = operator.equals("*") ? Color.parseColor("#FF9800") : Color.parseColor("#2196F3");
+
+            // 著色運算符號 (* or /)
+            spannable.setSpan(
+                    new ForegroundColorSpan(color),
+                    matcher.start(2),
+                    matcher.end(2),
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            );
+
+            // 著色左側數字
+            spannable.setSpan(
+                    new ForegroundColorSpan(color),
+                    matcher.start(1),
+                    matcher.end(1),
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            );
+
+            // 著色右側數字
+            spannable.setSpan(
+                    new ForegroundColorSpan(color),
+                    matcher.start(3),
+                    matcher.end(3),
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            );
+        }
+    }
 
 }

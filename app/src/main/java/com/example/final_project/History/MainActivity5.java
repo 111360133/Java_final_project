@@ -142,15 +142,24 @@ public class MainActivity5 extends AppCompatActivity {
     }
 
     // 刪除單項歷史紀錄
+    // 刪除單項歷史紀錄
     private void deleteSingleRecord(int position) {
         List<String> historyList = SharedData.getInstance().getHistoryList();
         if (historyList != null && position >= 0 && position < historyList.size()) {
-            historyList.remove(position); // 從歷史紀錄中移除該項
+            // 從歷史紀錄中移除該項
+            historyList.remove(position);
             SharedData.getInstance().setHistoryList(historyList); // 更新儲存的歷史紀錄
-            adapter.remove(adapter.getItem(position)); // 更新 ListView 顯示
-            adapter.notifyDataSetChanged();
+
+            // 更新自定義 Adapter
+            HistoryAdapter customAdapter = (HistoryAdapter) historyListView.getAdapter();
+            customAdapter.removeItem(position); // 使用自定義的刪除方法
+            customAdapter.notifyDataSetChanged();
+
             showToast("該項紀錄已刪除");
+        } else {
+            showToast("無法刪除該項紀錄");
         }
     }
+
 
 }
